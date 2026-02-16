@@ -57,13 +57,20 @@ export interface CreateListingData {
 
 export async function createListing(data: CreateListingData): Promise<string> {
   const firestore = requireDb()
-  const { dateFrom, dateTo, ...rest } = data
-  const docRef = await addDoc(collection(firestore, 'listings'), {
+  const { dateFrom, dateTo, rabbitPhotoURL, rabbitName, experience, ...rest } = data
+
+  const docData: Record<string, unknown> = {
     ...rest,
     dateFrom: Timestamp.fromDate(dateFrom),
     dateTo: Timestamp.fromDate(dateTo),
     createdAt: serverTimestamp(),
-  })
+  }
+
+  if (rabbitPhotoURL) docData.rabbitPhotoURL = rabbitPhotoURL
+  if (rabbitName) docData.rabbitName = rabbitName
+  if (experience) docData.experience = experience
+
+  const docRef = await addDoc(collection(firestore, 'listings'), docData)
   return docRef.id
 }
 
