@@ -9,8 +9,8 @@ import {
   where,
   orderBy,
   serverTimestamp,
+  Timestamp,
   type QueryConstraint,
-  type Timestamp,
 } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { db, storage } from '@/lib/firebase'
@@ -57,10 +57,11 @@ export interface CreateListingData {
 
 export async function createListing(data: CreateListingData): Promise<string> {
   const firestore = requireDb()
+  const { dateFrom, dateTo, ...rest } = data
   const docRef = await addDoc(collection(firestore, 'listings'), {
-    ...data,
-    dateFrom: data.dateFrom,
-    dateTo: data.dateTo,
+    ...rest,
+    dateFrom: Timestamp.fromDate(dateFrom),
+    dateTo: Timestamp.fromDate(dateTo),
     createdAt: serverTimestamp(),
   })
   return docRef.id
