@@ -32,11 +32,11 @@ export function App() {
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="login" element={<LoginRedirect />} />
-        <Route path="listings" element={<BrowseListingsPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="dashboard" element={<DashboardPage />} />
           <Route path="listings/new" element={<CreateListingPage />} />
         </Route>
+        <Route path="listings" element={<BrowseListingsPage />} />
       </Route>
     </Routes>
   )
